@@ -88,6 +88,7 @@ typedef enum {
 -(NSData*)originalImageData;
 -(NSData*)imageDataWithFormat:(ABPersonImageFormat)imageFormat;
 -(BOOL)setImage:(UIImage*)image;
+-(BOOL)setImageWithURL:(NSURL *) URL;
 -(BOOL)removeImage;
 
 //personal properties
