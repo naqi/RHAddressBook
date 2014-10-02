@@ -216,26 +216,22 @@
 
 }
 
--(BOOL)setImageWithURL:(NSURL *) URL{
-
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:URL];
-    [request setHTTPMethod:@"GET"];
-    
-    NSURLResponse *response = nil;
-    NSError *error = nil;
-    NSData *result = [NSURLConnection sendSynchronousRequest:request
-                                           returningResponse:&response error:&error];
-    [request release];
-    
-    if(result){
-        UIImage *resultImage = [UIImage imageWithData:(NSData *)result];
-        return [self setImage:resultImage];
+-(BOOL)setImage:(UIImage*)image{
+    //extern bool ABPersonSetImageData(ABRecordRef person, CFDataRef imageData, CFErrorRef* error);
+    __block CFErrorRef errorRef = NULL;
+    __block BOOL result = NO;
+    CFDataRef imageDataRef = (CFDataRef) ARCBridgingRetain(UIImagePNGRepresentation(image));
+    [self performRecordAction:^(ABRecordRef recordRef) {
+        result = ABPersonSetImageData(recordRef, imageDataRef, &errorRef);
+    } waitUntilDone:YES];
+    if (!result) {
+        RHErrorLog(@"-[RHPerson %@] error:%@", NSStringFromSelector(_cmd), errorRef);
+        if (errorRef) CFRelease(errorRef);
     }
-    
-    return FALSE;
-    
-
+    if (imageDataRef) CFRelease(imageDataRef);
+    return result;
 }
+
 
 -(BOOL)removeImage{
     __block CFErrorRef errorRef = NULL;
