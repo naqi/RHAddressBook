@@ -204,7 +204,6 @@
     NSError *error = nil;
     NSData *result = [NSURLConnection sendSynchronousRequest:request
                                            returningResponse:&response error:&error];
-    [request release];
     
     if(result){
         UIImage *resultImage = [UIImage imageWithData:(NSData *)result];
