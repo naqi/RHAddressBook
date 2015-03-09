@@ -151,7 +151,7 @@ BOOL rh_dispatch_is_current_queue_for_addressbook(RHAddressBook *addressBook){
 }
 
 
--(instancetype)init{
+-(id)init{
     self = [super init];
     if (self){
         
@@ -226,7 +226,7 @@ BOOL rh_dispatch_is_current_queue_for_addressbook(RHAddressBook *addressBook){
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
-    arc_release((id)_addressBookQueue); _addressBookQueue = NULL;
+    dispatch_release(_addressBookQueue); _addressBookQueue = NULL;
     
     _sharedServices = nil; //just throw away our pointer (its a singleton)
 
@@ -459,10 +459,10 @@ BOOL rh_dispatch_is_current_queue_for_addressbook(RHAddressBook *addressBook){
     return arc_autorelease(result);
 }
 
--(NSUInteger)numberOfGroups{
-    __block NSUInteger result = 0;
+-(long)numberOfGroups{
+    __block long result = 0;
     rh_dispatch_sync_for_addressbook(self, ^{
-        result = (NSUInteger)ABAddressBookGetGroupCount(_addressBookRef);
+        result = ABAddressBookGetGroupCount(_addressBookRef);
     });
     return result;
 }
@@ -602,10 +602,10 @@ BOOL rh_dispatch_is_current_queue_for_addressbook(RHAddressBook *addressBook){
     return arc_autorelease(result);
 }
 
--(NSUInteger)numberOfPeople{
-    __block NSUInteger result = 0;
+-(long)numberOfPeople{
+    __block long result = 0;
     rh_dispatch_sync_for_addressbook(self, ^{
-        result = (NSUInteger)ABAddressBookGetPersonCount(_addressBookRef);
+        result = ABAddressBookGetPersonCount(_addressBookRef);
     });
     return result;
 }
@@ -1036,13 +1036,9 @@ BOOL rh_dispatch_is_current_queue_for_addressbook(RHAddressBook *addressBook){
 }
 
 -(BOOL)hasUnsavedChanges{
-    __block BOOL result = NO;
+    __block BOOL result;
     rh_dispatch_sync_for_addressbook(self, ^{
-        if (_addressBookRef){
-            result = ABAddressBookHasUnsavedChanges(_addressBookRef);
-        } else {
-            RHLog(@"Error: -[RHAddressBook hasUnsavedChanges] called without an _addressBookRef. Assuming not modified and returning NO.");
-        }
+        result = ABAddressBookHasUnsavedChanges(_addressBookRef);
     });
     
     return result;
@@ -1050,7 +1046,7 @@ BOOL rh_dispatch_is_current_queue_for_addressbook(RHAddressBook *addressBook){
 
 -(void)revert{
     rh_dispatch_sync_for_addressbook(self, ^{
-        if (_addressBookRef) ABAddressBookRevert(_addressBookRef);
+        ABAddressBookRevert(_addressBookRef);
     });
 }
 

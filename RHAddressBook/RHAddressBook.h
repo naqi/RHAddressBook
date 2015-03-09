@@ -41,14 +41,6 @@
     #define RH_AB_INCLUDE_GEOCODING 0
 #endif
 
-//support building with older sdks that don't define NS_DESIGNATED_INITIALIZER
-#ifndef NS_DESIGNATED_INITIALIZER
-    #if __has_attribute(objc_designated_initializer)
-        #define NS_DESIGNATED_INITIALIZER __attribute__((objc_designated_initializer))
-    #else
-        #define NS_DESIGNATED_INITIALIZER
-    #endif
-#endif
 
 @class RHRecord;
 @class RHSource;
@@ -68,16 +60,17 @@ extern NSString * const RHAddressBookPersonAddressGeocodeCompleted;
 #endif
 
 //authorization status enum.
-typedef NS_ENUM(NSUInteger, RHAuthorizationStatus) {
+typedef enum RHAuthorizationStatus {
     RHAuthorizationStatusNotDetermined = 0,
     RHAuthorizationStatusRestricted,
     RHAuthorizationStatusDenied,
     RHAuthorizationStatusAuthorized
-};
+} RHAuthorizationStatus;
+
 
 @interface RHAddressBook : NSObject
 
--(instancetype)init NS_DESIGNATED_INITIALIZER; //create an instance of the addressbook (iOS6+ may return nil, signifying an access error. Error is logged to console)
+-(id)init; //create an instance of the addressbook (iOS6+ may return nil, signifying an access error. Error is logged to console)
 
 +(RHAuthorizationStatus)authorizationStatus; // pre iOS6+ will always return RHAuthorizationStatusAuthorized
 -(void)requestAuthorizationWithCompletion:(void (^)(bool granted, NSError* error))completion; //completion block is always called, you only need to call authorize if ([RHAddressBook authorizatonStatus] != RHAuthorizationStatusAuthorized). Pre, iOS6 completion block is always called with granted=YES. The block is called on an arbitrary queue, so dispatch_async to the main queue for any UI updates.
@@ -87,23 +80,23 @@ typedef NS_ENUM(NSUInteger, RHAuthorizationStatus) {
 -(void)performAddressBookAction:(void (^)(ABAddressBookRef addressBookRef))actionBlock waitUntilDone:(BOOL)wait;
 
 //access 
-@property (nonatomic, readonly, copy) NSArray *sources;
-@property (nonatomic, readonly, retain) RHSource *defaultSource;
+-(NSArray*)sources;
+-(RHSource*)defaultSource;
 -(RHSource*)sourceForABRecordRef:(ABRecordRef)sourceRef; //returns nil if ref not found in the current ab, eg unsaved record from another ab. if the passed recordRef does not belong to the current addressbook, the returned person objects underlying personRef will differ from the passed in value. This is required in-order to maintain thread safety for the underlying AddressBook instance.
 -(RHSource*)sourceForABRecordID:(ABRecordID)sourceID; //returns nil if not found in the current ab, eg unsaved record from another ab.
 
-@property (nonatomic, readonly, copy) NSArray *groups;
-@property (nonatomic, readonly) NSUInteger numberOfGroups;
+-(NSArray*)groups;
+-(long)numberOfGroups;
 -(NSArray*)groupsInSource:(RHSource*)source;
 -(RHGroup*)groupForABRecordRef:(ABRecordRef)groupRef; //returns nil if ref not found in the current ab, eg unsaved record from another ab. if the passed recordRef does not belong to the current addressbook, the returned person objects underlying personRef will differ from the passed in value. This is required in-order to maintain thread safety for the underlying AddressBook instance.
 -(RHGroup*)groupForABRecordID:(ABRecordID)groupID; //returns nil if not found in the current ab, eg unsaved record from another ab.
 
-@property (nonatomic, readonly, copy) NSArray *people;
-@property (nonatomic, readonly) NSUInteger numberOfPeople;
+-(NSArray*)people;
+-(long)numberOfPeople;
 -(NSArray*)peopleOrderedBySortOrdering:(ABPersonSortOrdering)ordering;
-@property (nonatomic, readonly, copy) NSArray *peopleOrderedByUsersPreference; //preferred
-@property (nonatomic, readonly, copy) NSArray *peopleOrderedByFirstName;
-@property (nonatomic, readonly, copy) NSArray *peopleOrderedByLastName;
+-(NSArray*)peopleOrderedByUsersPreference; //preferred
+-(NSArray*)peopleOrderedByFirstName;
+-(NSArray*)peopleOrderedByLastName;
 
 -(NSArray*)peopleWithName:(NSString*)name;
 -(NSArray*)peopleWithEmail:(NSString*)email;
@@ -148,7 +141,7 @@ typedef NS_ENUM(NSUInteger, RHAuthorizationStatus) {
 //save
 -(BOOL)save;
 -(BOOL)saveWithError:(NSError**)error;
-@property (nonatomic, readonly) BOOL hasUnsavedChanges;
+-(BOOL)hasUnsavedChanges;
 -(void)revert;
 
 
@@ -173,7 +166,7 @@ typedef NS_ENUM(NSUInteger, RHAuthorizationStatus) {
 //class methods to enable / disable geocoding
 +(BOOL)isPreemptiveGeocodingEnabled; //defaults to YES
 +(void)setPreemptiveGeocodingEnabled:(BOOL)enabled; //Geocoding starts on first instantiation of the AB class, therefore this is a class method, allowing you to set it to false before the first AB instance is created.
-@property (nonatomic, readonly) float preemptiveGeocodingProgress; // returns percentage range 0.0f - 1.0f
+-(float)preemptiveGeocodingProgress; // returns percentage range 0.0f - 1.0f
 
 //forward
 -(CLPlacemark*)placemarkForPerson:(RHPerson*)person addressID:(ABMultiValueIdentifier)addressID;

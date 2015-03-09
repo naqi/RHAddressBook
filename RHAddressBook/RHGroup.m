@@ -39,7 +39,7 @@
 @implementation RHGroup
 
 #pragma mark - group creator methods
-+(instancetype)newGroupInSource:(RHSource*)source{
++(id)newGroupInSource:(RHSource*)source{
     ABRecordRef newGroupRef = ABGroupCreateInSource(source.recordRef);
     RHGroup *newGroup = nil;
     if (newGroupRef){

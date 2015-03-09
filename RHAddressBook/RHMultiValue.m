@@ -38,7 +38,7 @@
 @synthesize multiValueRef=_multiValueRef;
 
 #pragma mark - init
--(instancetype)initWithMultiValueRef:(ABMultiValueRef)multiValueRef{
+-(id)initWithMultiValueRef:(ABMultiValueRef)multiValueRef{
     self = [super init];
     if (self){
         if (!multiValueRef){
@@ -162,7 +162,7 @@
 
 #pragma mark - basic modifiers (mutable)
 
--(instancetype)initWithType:(ABPropertyType)newPropertyType{
+-(id)initWithType:(ABPropertyType)newPropertyType{
     ABMultiValueRef multiValueRef = ABMultiValueCreateMutable(newPropertyType);
     id new = nil;
     if (multiValueRef){

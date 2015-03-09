@@ -22,7 +22,7 @@
 
 @synthesize group=_group;
 
-- (instancetype)initWithGroup:(RHGroup*)group{
+- (id)initWithGroup:(RHGroup*)group{
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
         _group = [group retain];

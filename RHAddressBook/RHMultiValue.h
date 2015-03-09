@@ -30,7 +30,7 @@
 
 #import <Foundation/Foundation.h>
 #import <AddressBook/AddressBook.h>
-#import "RHAddressBook.h"
+
 
 @class RHMultiValue;
 @class RHMutableMultiValue;
@@ -59,15 +59,15 @@ typedef RHMutableMultiValue RHMutableMultiDictionaryValue;
 @property (readonly) ABMultiValueRef multiValueRef;
 
 //init
--(instancetype)initWithMultiValueRef:(ABMultiValueRef)multiValueRef NS_DESIGNATED_INITIALIZER; //passing NULL to init is invalid
+-(id)initWithMultiValueRef:(ABMultiValueRef)multiValueRef; //passing NULL to init is invalid
                        
 //accessors
-@property (nonatomic, readonly) ABPropertyType propertyType;
+-(ABPropertyType)propertyType;
 
 //values
-@property (nonatomic, readonly) NSUInteger count; 
+-(NSUInteger)count; 
 -(id)valueAtIndex:(NSUInteger)index;
-@property (nonatomic, readonly, copy) NSArray *values;
+-(NSArray*)values;
 
 //labels
 -(NSString*)labelAtIndex:(NSUInteger)index;
@@ -93,7 +93,7 @@ typedef RHMutableMultiValue RHMutableMultiDictionaryValue;
 @interface RHMutableMultiValue : RHMultiValue
 
 //init
--(instancetype)initWithType:(ABPropertyType)newPropertyType; //a new MultiValue Ref of specified type is created on your behalf.
+-(id)initWithType:(ABPropertyType)newPropertyType; //a new MultiValue Ref of specified type is created on your behalf.
 
 -(ABMultiValueIdentifier)addValue:(id)value withLabel:(NSString *)label; //on failure kABMultiValueInvalidIdentifier
 -(ABMultiValueIdentifier)insertValue:(id)value withLabel:(NSString *)label atIndex:(NSUInteger)index; //on failure kABMultiValueInvalidIdentifier

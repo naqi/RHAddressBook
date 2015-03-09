@@ -37,7 +37,7 @@
 @implementation RHPerson
 
 #pragma mark - person creator methods
-//+(instancetype)newPersonInDefaultSource{
+//+(id)newPersonInDefaultSource{
 //    //this is not currently supported.... 
 //    ABRecordRef newPersonRef = ABPersonCreate();
 //    RHPerson *newPerson = nil;
@@ -49,11 +49,11 @@
 //    return newPerson;
 //}
 
-+(instancetype)newPersonInSource:(RHSource*)source{
++(id)newPersonInSource:(RHSource*)source{
     return [[RHPerson alloc] initWithSource:source];
 }
 
--(instancetype)initWithSource:(RHSource *)source{
+-(id)initWithSource:(RHSource *)source{
     ABRecordRef newPersonRef = ABPersonCreateInSource(source.recordRef);
     if (newPersonRef){
         self = [super initWithAddressBook:source.addressBook recordRef:newPersonRef];

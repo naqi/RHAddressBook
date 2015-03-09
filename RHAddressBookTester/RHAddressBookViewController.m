@@ -31,7 +31,7 @@
 
 @synthesize addressBook=_addressBook;
 
-- (instancetype)initWithAddressBook:(RHAddressBook *)addressBook {
+- (id)initWithAddressBook:(RHAddressBook *)addressBook {
     self = [super initWithStyle:UITableViewStyleGrouped];
     if (self) {
         // Custom initialization
