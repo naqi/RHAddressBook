@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'RHAddressBook'
-  s.version      = '1.2.1'
+  s.version      = '1.2.2'
   s.homepage     = 'https://github.com/heardrwt/RHAddressBook'
   s.summary      = 'A Cocoa / Objective-C library for interfacing with the iOS AddressBook. Also adds geocoding support.'
   s.author       = 'Richard Heard'
