@@ -219,7 +219,7 @@
     //extern bool ABPersonSetImageData(ABRecordRef person, CFDataRef imageData, CFErrorRef* error);
     __block CFErrorRef errorRef = NULL;
     __block BOOL result = NO;
-    CFDataRef imageDataRef = (CFDataRef) ARCBridgingRetain(UIImagePNGRepresentation(image));
+    CFDataRef imageDataRef = (CFDataRef) ARCBridgingRetain(UIImageJPEGRepresentation(image, 0.8));
     [self performRecordAction:^(ABRecordRef recordRef) {
         result = ABPersonSetImageData(recordRef, imageDataRef, &errorRef);
     } waitUntilDone:YES];
