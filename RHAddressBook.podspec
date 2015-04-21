@@ -4,7 +4,7 @@ Pod::Spec.new do |s|
   s.homepage     = 'https://github.com/heardrwt/RHAddressBook'
   s.summary      = 'A Cocoa / Objective-C library for interfacing with the iOS AddressBook. Also adds geocoding support.'
   s.author       = 'Richard Heard'
-  s.source       = { :git => 'https://github.com/heardrwt/RHAddressBook.git', :tag => s.version.to_s}
+  s.source       = { :git => 'https://github.com/naqi/RHAddressBook.git', :tag => s.version.to_s}
   s.source_files = 'RHAddressBook/*.{h,m}'
   s.prefix_header_file = 'RHAddressBook/RHAddressBook-Prefix.pch'
   s.frameworks   = 'AddressBook', 'CoreLocation', 'AddressBookUI'
