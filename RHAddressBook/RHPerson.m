@@ -37,7 +37,7 @@
 @implementation RHPerson
 
 #pragma mark - person creator methods
-//+(id)newPersonInDefaultSource{
+//+(instancetype)newPersonInDefaultSource{
 //    //this is not currently supported.... 
 //    ABRecordRef newPersonRef = ABPersonCreate();
 //    RHPerson *newPerson = nil;
@@ -49,11 +49,11 @@
 //    return newPerson;
 //}
 
-+(id)newPersonInSource:(RHSource*)source{
++(instancetype)newPersonInSource:(RHSource*)source{
     return [[RHPerson alloc] initWithSource:source];
 }
 
--(id)initWithSource:(RHSource *)source{
+-(instancetype)initWithSource:(RHSource *)source{
     ABRecordRef newPersonRef = ABPersonCreateInSource(source.recordRef);
     if (newPersonRef){
         self = [super initWithAddressBook:source.addressBook recordRef:newPersonRef];
@@ -196,7 +196,7 @@
 }
 
 -(BOOL)setImageWithURL:(NSURL *) URL{
-
+    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:URL];
     [request setHTTPMethod:@"GET"];
     
@@ -211,15 +211,14 @@
     }
     
     return FALSE;
-    
-
 }
+
 
 -(BOOL)setImage:(UIImage*)image{
     //extern bool ABPersonSetImageData(ABRecordRef person, CFDataRef imageData, CFErrorRef* error);
     __block CFErrorRef errorRef = NULL;
     __block BOOL result = NO;
-    CFDataRef imageDataRef = (CFDataRef) ARCBridgingRetain(UIImageJPEGRepresentation(image, 0.8));
+    CFDataRef imageDataRef = (CFDataRef) ARCBridgingRetain(UIImagePNGRepresentation(image));
     [self performRecordAction:^(ABRecordRef recordRef) {
         result = ABPersonSetImageData(recordRef, imageDataRef, &errorRef);
     } waitUntilDone:YES];
@@ -230,7 +229,6 @@
     if (imageDataRef) CFRelease(imageDataRef);
     return result;
 }
-
 
 -(BOOL)removeImage{
     __block CFErrorRef errorRef = NULL;
